@@ -34,6 +34,12 @@ jobs:
     workingDirectory: WebApp
     displayName: 'PS : Add Project GUID'
   
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare analysis on SonarCloud'
+    inputs:
+      SonarCloud: SonarCloud
+      organization: dotnet-core-mvc-app
+      projectKey: Dotnet-Core-MVC-App
 
   
   - task: DotNetCoreCLI@2
