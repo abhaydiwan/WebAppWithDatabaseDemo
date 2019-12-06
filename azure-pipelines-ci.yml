@@ -37,7 +37,7 @@ jobs:
   - task: SonarCloudPrepare@1
     displayName: 'Prepare analysis on SonarCloud'
     inputs:
-      SonarCloud: SonarCloud
+      SonarCloud: WebAppWithDatabaseDemo
       organization: dotnet-core-mvc-app
       projectKey: WebAppWithDatabaseDemoAbhay
   
