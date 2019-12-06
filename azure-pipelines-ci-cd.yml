@@ -164,7 +164,7 @@ stages:
     variables:
       Parameters.ConnectedServiceName: 'AzureServiceConnection' # couldn't be referenced
       ResourceGroupName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)-RG'
-      Database.Admin: 'administrator'
+      Database.Admin: 'userabhay'
       Database.Password: '@Aa123456'
       Database.Name: 'EmployeesDB'
       WebAppName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)'
