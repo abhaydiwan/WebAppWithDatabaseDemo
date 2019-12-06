@@ -162,9 +162,9 @@ stages:
       name: Hosted Windows 2019 with VS2019 
       vmImage: 'windows-2019'
     variables:
-      Parameters.ConnectedServiceName: 'Visual Studio Enterprise' # couldn't be referenced
+      Parameters.ConnectedServiceName: 'AzureServiceConnection' # couldn't be referenced
       ResourceGroupName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)-RG'
-      Database.Admin: 'houssem'
+      Database.Admin: 'administrator'
       Database.Password: '@Aa123456'
       Database.Name: 'EmployeesDB'
       WebAppName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)'
@@ -190,7 +190,7 @@ stages:
       displayName: Validate ARM template
       enabled: 'true'
       inputs:
-        azureSubscription: 'Visual Studio Enterprise'
+        azureSubscription: 'AzureServiceConnection'
         action: 'Create Or Update Resource Group'
         resourceGroupName: '$(ResourceGroupName)'
         location: 'West Europe'
@@ -204,7 +204,7 @@ stages:
       displayName: Create Or Update Resource Group
       enabled: 'true'
       inputs:
-        azureSubscription: 'Visual Studio Enterprise'
+        azureSubscription: 'AzureServiceConnection'
         action: 'Create Or Update Resource Group'
         resourceGroupName: '$(ResourceGroupName)'
         location: 'West Europe'
@@ -232,7 +232,7 @@ stages:
       displayName: Deploy Web App to Azure App Service
       enabled: 'true'
       inputs:
-        azureSubscription: 'Visual Studio Enterprise'
+        azureSubscription: 'AzureServiceConnection'
         appType: 'webApp'
         WebAppName: '$(WebAppName)'
         TakeAppOfflineFlag: true
@@ -253,7 +253,7 @@ stages:
     - task: SqlAzureDacpacDeployment@1
       displayName: Azure SQL Publish DacPac to SQL Azure
       inputs:
-        azureSubscription: 'Visual Studio Enterprise'
+        azureSubscription: 'AzureServiceConnection'
         ServerName: '$(SqlServerName).database.windows.net,1433'
         DatabaseName: '$(Database.Name)'
         SqlUsername: '$(Database.Admin)'
