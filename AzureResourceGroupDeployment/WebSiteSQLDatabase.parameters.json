@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "hostingPlanName": {
-      "value": "houssemdellai-service-plan"
+      "value": "AbhayDiwan-service-plan"
     },
     "administratorLogin": {
-      "value": "houssem"
+      "value": "administrator"
     },
     "administratorLoginPassword": {
       "value": "@Aa123456"
@@ -15,10 +15,10 @@
       "value": "EmployeesDB"
     },
     "webSiteName": {
-      "value": "houssemdellai-webapp"
+      "value": "abhaydiwan-webapp"
     },
     "sqlserverName": {
-      "value": "houssemdellai-sql"
+      "value": "abhaydiwan-sql"
     }
   }
 }
