@@ -170,7 +170,7 @@ stages:
       WebAppName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)'
       WebAppNameUrl: 'https://$(WebAppName).azurewebsites.net/'
       SqlServerName: '$(Prefix)-sql-$(Release.EnvironmentName)-$(UniqueId)'
-      Prefix: 'tunis'
+      Prefix: 'tunis-abhay'
       Release.EnvironmentName: 'dev'
       UniqueId: '1280' #'$(Build.BuildId)'
 
@@ -197,7 +197,7 @@ stages:
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/**/arm/WebSiteSQLDatabase.json'
         csmParametersFile: '$(System.DefaultWorkingDirectory)/**/arm/WebSiteSQLDatabase.parameters.json'
-        overrideParameters: '-hostingPlanName "houssemdellai-service-plan" -skuName "F1" -skuCapacity 1 -administratorLogin $(Database.Admin) -administratorLoginPassword $(Database.Password) -databaseName $(Database.Name) -collation "SQL_Latin1_General_CP1_CI_AS" -edition "Basic" -maxSizeBytes "1073741824" -requestedServiceObjectiveName "Basic" -webSiteName $(WebAppName) -sqlserverName $(SqlServerName)'
+        overrideParameters: '-hostingPlanName "abhaydiwan-service-plan" -skuName "F1" -skuCapacity 1 -administratorLogin $(Database.Admin) -administratorLoginPassword $(Database.Password) -databaseName $(Database.Name) -collation "SQL_Latin1_General_CP1_CI_AS" -edition "Basic" -maxSizeBytes "1073741824" -requestedServiceObjectiveName "Basic" -webSiteName $(WebAppName) -sqlserverName $(SqlServerName)'
         deploymentMode: 'Validation'
 
     - task: AzureResourceGroupDeployment@2
@@ -211,7 +211,7 @@ stages:
         templateLocation: 'Linked artifact'
         csmFile: '$(System.DefaultWorkingDirectory)/**/arm/WebSiteSQLDatabase.json'
         csmParametersFile: '$(System.DefaultWorkingDirectory)/**/arm/WebSiteSQLDatabase.parameters.json'
-        overrideParameters: '-hostingPlanName "houssemdellai-service-plan" -skuName "F1" -skuCapacity 1 -administratorLogin $(Database.Admin) -administratorLoginPassword $(Database.Password) -databaseName $(Database.Name) -collation "SQL_Latin1_General_CP1_CI_AS" -edition "Basic" -maxSizeBytes "1073741824" -requestedServiceObjectiveName "Basic" -webSiteName $(WebAppName) -sqlserverName $(SqlServerName)'
+        overrideParameters: '-hostingPlanName "abhaydiwan-service-plan" -skuName "F1" -skuCapacity 1 -administratorLogin $(Database.Admin) -administratorLoginPassword $(Database.Password) -databaseName $(Database.Name) -collation "SQL_Latin1_General_CP1_CI_AS" -edition "Basic" -maxSizeBytes "1073741824" -requestedServiceObjectiveName "Basic" -webSiteName $(WebAppName) -sqlserverName $(SqlServerName)'
         deploymentMode: Complete
 
     - task: DownloadBuildArtifacts@0    
