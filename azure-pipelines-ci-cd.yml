@@ -187,6 +187,14 @@ stages:
 
     steps:
     - checkout: none
+    - task: UseRubyVersion@0
+      displayName: "Install Ruby"
+      inputs:
+        versionSpec: ">= 2.5"
+        addToPath: true
+    - script: gem install inspec
+      displayName: "Install inspec"
+    
     - task: DownloadBuildArtifacts@0
       displayName: Download Build Artifacts
       inputs:
