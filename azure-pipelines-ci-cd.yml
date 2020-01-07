@@ -151,6 +151,17 @@ stages:
       inputs:
         PathtoPublish: AzureResourceGroupDeployment
         ArtifactName: arm
+  - job: InspecTest
+    displayName: Publish Inspec test files Job
+    pool:
+      name: Hosted Ubuntu 1604
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: Inspec Azure Test'
+      inputs:
+        PathtoPublish: tunis-testing
+        ArtifactName: inspectest
 
 - stage: Dev_Stage
   displayName: Dev Stage
