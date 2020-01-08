@@ -1,0 +1,127 @@
+pr:
+  branches:
+    include:
+      - dev
+  paths:
+    exclude:
+      - docs/*
+      - README.md
+
+trigger:
+ branches:
+   include:
+     - master
+ paths:
+   exclude:
+     - docs/*
+     - README.md
+     - azure-pipelines-ci.yml
+     - azure-pipelines-ci-cd.yml
+
+stages:
+- stage: Build_Stage
+  displayName: Build Stage
+  jobs:
+
+  - job: Infrastructure
+    displayName: Publish Infra files Job
+    pool:
+      name: Hosted Ubuntu 1604
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: ARM templates'
+      inputs:
+        PathtoPublish: AzureResourceGroupDeployment
+        ArtifactName: arm
+  - job: InspecTest
+    displayName: Publish Inspec test files Job
+    pool:
+      name: Hosted Ubuntu 1604
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: Inspec Azure Test'
+      inputs:
+        PathtoPublish: tunis-testing
+        ArtifactName: inspectest
+
+- stage: Dev_Stage
+  displayName: Dev Stage
+  dependsOn: Build_Stage
+  jobs:
+  - job: Dev
+    displayName: Deploy to Dev Job
+    pool:
+      name: Hosted Windows 2019 with VS2019 
+      vmImage: 'windows-2019'
+    variables:
+      Parameters.ConnectedServiceName: 'AzureServiceConnection' # couldn't be referenced
+      ResourceGroupName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)-RG'
+      Database.Admin: 'userabhay'
+      Database.Password: '@Aa123456'
+      Database.Name: 'EmployeesDB'
+      WebAppName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)'
+      WebAppNameUrl: 'https://$(WebAppName).azurewebsites.net/'
+      SqlServerName: '$(Prefix)-sql-$(Release.EnvironmentName)-$(UniqueId)'
+      Prefix: 'tunis-abhay'
+      Release.EnvironmentName: 'dev'
+      UniqueId: '1280' #'$(Build.BuildId)'
+
+    steps:
+    - checkout: none
+    - task: UseRubyVersion@0
+      displayName: "Install Ruby"
+      inputs:
+        versionSpec: ">= 2.5"
+        addToPath: true
+    - script: gem install inspec --no-doc
+      displayName: "Install inspec"
+    
+- stage: Test_Stage
+  displayName: Test Stage
+  jobs:
+  - job:
+    displayName: Deploy to Test Job
+    pool:
+      vmImage: "Ubuntu-16.04"
+    steps:
+      - task: UseRubyVersion@0
+        displayName: "Install Ruby"
+        inputs:
+          versionSpec: ">= 2.5"
+          addToPath: true
+    
+      - script: gem install inspec
+        displayName: "Install inspec"
+      - task: DownloadBuildArtifacts@0
+        displayName: Download Build Artifacts
+        inputs:
+          artifactName: inspectest
+          downloadPath: $(System.DefaultWorkingDirectory)    
+  
+      - task: Bash@3
+        displayName: "Run inspec tests"
+        inputs:
+          targetType: inline
+          script: |
+            export AZURE_SUBSCRIPTION_ID="$(inspec.subscriptionId)"
+            export AZURE_CLIENT_ID="$(inspec.clientId)"
+            export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
+            export AZURE_TENANT_ID="$(inspec.tenantId)"
+            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
+    
+      - task: PublishTestResults@2
+        displayName: Publish inspec test results
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: "**/testresults.xml"
+          mergeTestResults: true
+    
+      - task: PublishBuildArtifacts@1
+        displayName: Publish inspec HTML report
+        condition: succeededOrFailed()
+        inputs:
+          pathtoPublish: "report.html"
+          artifactName: "report"
+          
