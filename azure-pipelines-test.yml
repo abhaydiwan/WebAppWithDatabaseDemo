@@ -68,8 +68,7 @@ stages:
       - script: gem env
         displayName: "Gem env"
       
-      - script: which inspec
-        displayName: "Gem env"
+   
           
       - task: DownloadBuildArtifacts@0
         displayName: Download Build Artifacts
@@ -87,7 +86,7 @@ stages:
             export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
             export AZURE_TENANT_ID="$(inspec.tenantId)"
             inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
-          condition: always() 
+          
       - task: PublishTestResults@2
         displayName: Publish inspec test results
         condition: succeededOrFailed()
