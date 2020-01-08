@@ -73,7 +73,7 @@ stages:
       - task: DownloadBuildArtifacts@0
         displayName: Download Build Artifacts
         inputs:
-          artifactName: inspectest
+          artifactName: tunis-testing
           downloadPath: $(System.DefaultWorkingDirectory)    
   
       - task: Bash@3
