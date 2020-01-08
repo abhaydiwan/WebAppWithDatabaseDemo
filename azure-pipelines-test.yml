@@ -46,38 +46,7 @@ stages:
         PathtoPublish: tunis-testing
         ArtifactName: inspectest
 
-- stage: Dev_Stage
-  displayName: Dev Stage
-  dependsOn: Build_Stage
-  jobs:
-  - job: Dev
-    displayName: Deploy to Dev Job
-    pool:
-      name: Hosted Windows 2019 with VS2019 
-      vmImage: 'windows-2019'
-    variables:
-      Parameters.ConnectedServiceName: 'AzureServiceConnection' # couldn't be referenced
-      ResourceGroupName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)-RG'
-      Database.Admin: 'userabhay'
-      Database.Password: '@Aa123456'
-      Database.Name: 'EmployeesDB'
-      WebAppName: '$(Prefix)-$(Release.EnvironmentName)-$(UniqueId)'
-      WebAppNameUrl: 'https://$(WebAppName).azurewebsites.net/'
-      SqlServerName: '$(Prefix)-sql-$(Release.EnvironmentName)-$(UniqueId)'
-      Prefix: 'tunis-abhay'
-      Release.EnvironmentName: 'dev'
-      UniqueId: '1280' #'$(Build.BuildId)'
 
-    steps:
-    - checkout: none
-    - task: UseRubyVersion@0
-      displayName: "Install Ruby"
-      inputs:
-        versionSpec: ">= 2.5"
-        addToPath: true
-    - script: gem install inspec --no-doc
-      displayName: "Install inspec"
-    
 - stage: Test_Stage
   displayName: Test Stage
   jobs:
@@ -110,7 +79,7 @@ stages:
             export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
             export AZURE_TENANT_ID="$(inspec.tenantId)"
             inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
-    
+          condition: always() 
       - task: PublishTestResults@2
         displayName: Publish inspec test results
         condition: succeededOrFailed()
