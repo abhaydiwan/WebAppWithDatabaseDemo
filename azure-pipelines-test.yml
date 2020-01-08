@@ -85,7 +85,7 @@ stages:
             export AZURE_CLIENT_ID="$(inspec.clientId)"
             export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
             export AZURE_TENANT_ID="$(inspec.tenantId)"
-            inspec exec /home/vsts/work/1/s/inspectest -t azure:// --reporter cli junit:testresults.xml html:report.html
+            inspec exec /home/vsts/work/1/s/tunis-testing -t azure:// --reporter cli junit:testresults.xml html:report.html
           
       - task: PublishTestResults@2
         displayName: Publish inspec test results
