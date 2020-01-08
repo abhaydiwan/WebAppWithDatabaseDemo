@@ -160,8 +160,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: Inspec Azure Test'
       inputs:
-        PathtoPublish: tunis-testing
-        ArtifactName: inspectest
+        PathtoPublish: azure-testing
+        ArtifactName: azure-testing
 
 - stage: Dev_Stage
   displayName: Dev Stage
@@ -318,12 +318,12 @@ stages:
           versionSpec: ">= 2.5"
           addToPath: true
     
-      - script: gem install inspec
+      - script: gem install inspec -v 3.9.3 
         displayName: "Install inspec"
       - task: DownloadBuildArtifacts@0
         displayName: Download Build Artifacts
         inputs:
-          artifactName: inspectest
+          artifactName: azure-testing
           downloadPath: $(System.DefaultWorkingDirectory)    
   
       - task: Bash@3
@@ -335,7 +335,7 @@ stages:
             export AZURE_CLIENT_ID="$(inspec.clientId)"
             export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
             export AZURE_TENANT_ID="$(inspec.tenantId)"
-            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
+            inspec exec $(Build.SourcesDirectory)/azure-testing -t azure:// --reporter cli junit:testresults.xml html:report.html
     
       - task: PublishTestResults@2
         displayName: Publish inspec test results
