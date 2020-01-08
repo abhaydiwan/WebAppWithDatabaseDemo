@@ -43,8 +43,8 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: Inspec Azure Test'
       inputs:
-        PathtoPublish: tunis-testing
-        ArtifactName: tunis-testing
+        PathtoPublish: azure-testing
+        ArtifactName: azure-testing
 
 
 - stage: Test_Stage
@@ -73,7 +73,7 @@ stages:
       - task: DownloadBuildArtifacts@0
         displayName: Download Build Artifacts
         inputs:
-          artifactName: tunis-testing
+          artifactName: azure-testing
           downloadPath: $(System.DefaultWorkingDirectory)    
   
       - task: Bash@3
