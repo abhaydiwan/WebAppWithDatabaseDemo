@@ -60,7 +60,7 @@ stages:
         inputs:
           versionSpec: "= 2.5.5"
           addToPath: true
-      - script: gem install inspec --no-doc
+      - script: gem install inspec -v 3.9.3 
         displayName: "Install inspec"
       - script: gem list | grep inspec
         displayName: "grep ruby"
