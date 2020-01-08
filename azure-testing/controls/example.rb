@@ -6,11 +6,6 @@ describe azurerm_resource_groups do
   its('names') { should include 'tunis-abhay-dev-1280-RG' }
 end
 
-### Insist that your resource group exists
-describe azurerm_resource_groups.where(name: 'tunis-abhay-dev-1280-RG')
-  it { should exist }
-end
-
 ### Check for a sql server
 describe azurerm_sql_servers do
   its('names')  { should include 'tunis-abhay-sql-dev-1280' }
