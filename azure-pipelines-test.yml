@@ -53,7 +53,7 @@ stages:
   - job:
     displayName: Deploy to Test Job
     pool:
-      name: Inspec
+      name: Hosted Windows 2019 with VS2019
       vmImage: "windows-2019"
     steps:
       - task: UseRubyVersion@0
@@ -61,7 +61,7 @@ stages:
         inputs:
           versionSpec: ">= 2.5"
           addToPath: true
-      - script: gem install inspec && inspec -v
+      - script: gem install inspec --no-doc
         displayName: "Install inspec"
 
       - task: DownloadBuildArtifacts@0
@@ -75,11 +75,11 @@ stages:
         inputs:
           targetType: inline
           script: |
-            export AZURE_SUBSCRIPTION_ID="$(inspec.subscriptionId)"
-            export AZURE_CLIENT_ID="$(inspec.clientId)"
-            export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
-            export AZURE_TENANT_ID="$(inspec.tenantId)"
-            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
+            set AZURE_SUBSCRIPTION_ID="$(inspec.subscriptionId)"
+            set AZURE_CLIENT_ID="$(inspec.clientId)"
+            set AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
+            set AZURE_TENANT_ID="$(inspec.tenantId)"
+            inspec exec '$(System.DefaultWorkingDirectory)/**/inspectest'/. -t azure:// --reporter cli junit:testresults.xml html:report.html
           condition: always() 
       - task: PublishTestResults@2
         displayName: Publish inspec test results
