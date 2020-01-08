@@ -44,7 +44,7 @@ stages:
       displayName: 'Publish Artifact: Inspec Azure Test'
       inputs:
         PathtoPublish: tunis-testing
-        ArtifactName: inspectest
+        ArtifactName: tunis-testing
 
 
 - stage: Test_Stage
@@ -85,7 +85,7 @@ stages:
             export AZURE_CLIENT_ID="$(inspec.clientId)"
             export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
             export AZURE_TENANT_ID="$(inspec.tenantId)"
-            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
+            inspec exec /home/vsts/work/1/s/inspectest -t azure:// --reporter cli junit:testresults.xml html:report.html
           
       - task: PublishTestResults@2
         displayName: Publish inspec test results
