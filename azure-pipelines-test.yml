@@ -62,7 +62,13 @@ stages:
           addToPath: true
       - script: gem install inspec --no-doc
         displayName: "Install inspec"
-
+      - script: gem list | grep inspec
+        displayName: "grep ruby"
+      
+      - script: gem env
+        displayName: "Gem env"
+      
+          
       - task: DownloadBuildArtifacts@0
         displayName: Download Build Artifacts
         inputs:
