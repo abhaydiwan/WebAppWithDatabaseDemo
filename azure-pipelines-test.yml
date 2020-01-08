@@ -84,7 +84,7 @@ stages:
   - job:
     displayName: Deploy to Test Job
     pool:
-      vmImage: "Ubuntu-16.04"
+      vmImage: "Ubuntu 18.04"
     steps:
       - task: UseRubyVersion@0
         displayName: "Install Ruby"
