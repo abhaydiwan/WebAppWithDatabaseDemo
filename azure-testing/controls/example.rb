@@ -1,8 +1,22 @@
 # copyright: 2018, The Authors
 
-title "sql server testing"
+title "Azure Resource Testing"
+### Check for a Resource Group
+describe azurerm_resource_groups do
+  its('names') { should include 'tunis-abhay-dev-1280-RG' }
+end
 
+### Insist that your resource group exists
+describe azurerm_resource_groups.where(name: 'tunis-abhay-dev-1280-RG')
+  it { should exist }
+end
+
+### Check for a sql server
+describe azurerm_sql_servers do
+  its('names')  { should include 'tunis-abhay-sql-dev-1280' }
+end
+
+### Insist that your sql server exists
 describe azurerm_sql_servers do
   it            { should exist }
-  its('names')  { should include 'tunis-abhay-sql-dev-1280' }
 end
