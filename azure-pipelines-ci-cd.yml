@@ -232,37 +232,6 @@ stages:
         csmParametersFile: '$(System.DefaultWorkingDirectory)/**/arm/WebSiteSQLDatabase.parameters.json'
         overrideParameters: '-hostingPlanName "abhaydiwan-service-plan" -skuName "F1" -skuCapacity 1 -administratorLogin $(Database.Admin) -administratorLoginPassword $(Database.Password) -databaseName $(Database.Name) -collation "SQL_Latin1_General_CP1_CI_AS" -edition "Basic" -maxSizeBytes "1073741824" -requestedServiceObjectiveName "Basic" -webSiteName $(WebAppName) -sqlserverName $(SqlServerName)'
         deploymentMode: Complete
-    
-    - task: DownloadBuildArtifacts@0
-      displayName: Download Build Artifacts
-      inputs:
-        artifactName: inspectest
-        downloadPath: $(System.DefaultWorkingDirectory)    
-    
-    - task: CmdLine@2
-      displayName: "Run inspec tests"
-      inputs:
-        targetType: inline
-        script: |
-            set AZURE_SUBSCRIPTION_ID="$(inspec.subscriptionId)"
-            set AZURE_CLIENT_ID="$(inspec.clientId)"
-            set AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
-            set AZURE_TENANT_ID="$(inspec.tenantId)"
-            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html    
-    
-    - task: PublishTestResults@2
-      displayName: Publish inspec test results
-      condition: succeededOrFailed()
-      inputs:
-        testResultsFiles: "**/testresults.xml"
-        mergeTestResults: true
-        
-    - task: PublishBuildArtifacts@1
-      displayName: Publish inspec HTML report
-      condition: succeededOrFailed()
-      inputs:
-        pathtoPublish: "report.html"
-        artifactName: "report"
 
     - task: DownloadBuildArtifacts@0    
       displayName: Download WebApp.zip
@@ -340,10 +309,47 @@ stages:
   jobs:
   - job:
     displayName: Deploy to Test Job
+    pool:
+      vmImage: "Ubuntu-16.04"
     steps:
-      - task: CmdLine@2
+      - task: UseRubyVersion@0
+        displayName: "Install Ruby"
         inputs:
-          script: 'ls'
+          versionSpec: ">= 2.5"
+          addToPath: true
+    
+      - script: gem install inspec
+        displayName: "Install inspec"
+      - task: DownloadBuildArtifacts@0
+        displayName: Download Build Artifacts
+        inputs:
+          artifactName: inspectest
+          downloadPath: $(System.DefaultWorkingDirectory)    
+  
+      - task: Bash@3
+        displayName: "Run inspec tests"
+        inputs:
+          targetType: inline
+          script: |
+            export AZURE_SUBSCRIPTION_ID="$(inspec.subscriptionId)"
+            export AZURE_CLIENT_ID="$(inspec.clientId)"
+            export AZURE_CLIENT_SECRET="$(inspec.clientSecret)"
+            export AZURE_TENANT_ID="$(inspec.tenantId)"
+            inspec exec . -t azure:// --reporter cli junit:testresults.xml html:report.html
+    
+      - task: PublishTestResults@2
+        displayName: Publish inspec test results
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFiles: "**/testresults.xml"
+          mergeTestResults: true
+    
+      - task: PublishBuildArtifacts@1
+        displayName: Publish inspec HTML report
+        condition: succeededOrFailed()
+        inputs:
+          pathtoPublish: "report.html"
+          artifactName: "report"
           
 - stage: Prod_Stage
   displayName: Prod Stage
