@@ -53,6 +53,7 @@ stages:
   - job:
     displayName: Deploy to Test Job
     pool:
+      name: Inspec
       vmImage: "windows-2019"
     steps:
       - task: UseRubyVersion@0
